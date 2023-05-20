@@ -9,7 +9,7 @@ public class booksearchModel {
     String ISBN;
 
 
-    public booksearchModel(int barcode_Bok, String bok_namn, int bok_Ar, String bok_Genre, String kategori, String bok_Forfattare, int hylla, int Antal_Kopior_Inne, int ISBN) {
+    public booksearchModel(int barcode_Bok, String bok_namn, int bok_Ar, String bok_Genre, String kategori, String bok_Forfattare, int hylla, int Antal_Kopior_Inne, String ISBN) {
         this.barcode_Bok = barcode_Bok;
         this.bok_namn = bok_namn;
         this.bok_Ar = bok_Ar;
@@ -89,6 +89,6 @@ public class booksearchModel {
         Antal_Kopior_Inne = antal_Kopior_Inne;
     }
 
-    public void setISBN(int ISBN) {this.ISBN = ISBN;}
+    public void setISBN(String ISBN) {this.ISBN = ISBN;}
 
 }

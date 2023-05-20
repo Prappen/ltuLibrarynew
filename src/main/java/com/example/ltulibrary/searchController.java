@@ -43,7 +43,7 @@ public class searchController implements Initializable {
     @FXML
     private TextField Keywordsbooks;
     @FXML
-    private Button addBook;
+    private Button Addbook;
 
     private List<booksearchModel> addedBook = new ArrayList<>();
     private ObservableList<booksearchModel> booksearchModelObservableList = FXCollections.observableArrayList();
@@ -73,7 +73,7 @@ public class searchController implements Initializable {
                 String querybookautor = queryOutput.getString("bok_Forfattare");
                 int querybookshelf = queryOutput.getInt("Hylla");
                 int querybookamount = queryOutput.getInt("Antal_Kopior_Inne");
-                String querybookisbn = queryOutput.getInt("ISBN");
+                String querybookisbn = queryOutput.getString("ISBN");
 
                 booksearchModelObservableList.add(new booksearchModel(querybarcodebok,
                         querybokname, querybookyear, querybokgenre, querybookcategory,
@@ -120,7 +120,7 @@ public class searchController implements Initializable {
 
     @FXML
     public void AddbookAction(ActionEvent event) {
-        addBook.setOnAction(e -> {
+        Addbook.setOnAction(e -> {
             booksearchModel selectedBook = booktableview.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {
                 addedBook.add(selectedBook);
