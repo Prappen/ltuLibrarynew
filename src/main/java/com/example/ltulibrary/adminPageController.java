@@ -22,6 +22,11 @@ public class adminPageController  implements Initializable {
 
     @FXML
     private Button adminReturnButton;
+    @FXML
+    private Button bookButton;
+    @FXML
+    private Button DvdButton;
+
 
     public void OnAdminReturn() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("startPage.fxml"));
@@ -32,7 +37,24 @@ public class adminPageController  implements Initializable {
 
 
     }
-}
+    public void onBook() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("adminBook.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) bookButton.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
 
+
+    }
+    public void onDvd() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("adminDVD.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) DvdButton.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
+
+
+    }
+}
 
 

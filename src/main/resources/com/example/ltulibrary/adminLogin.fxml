@@ -19,8 +19,8 @@
             </Text>
          </top>
       </BorderPane>
-      <TextField layoutX="300.0" layoutY="147.0" promptText="Username..." />
-      <PasswordField layoutX="300.0" layoutY="203.0" promptText="password..." />
+      <TextField fx:id="adminNameTextField" layoutX="300.0" layoutY="147.0" onAction="#adminNameOnAction" promptText="Username..." />
+      <PasswordField fx:id="adminPasswordTextField" layoutX="300.0" layoutY="203.0" onAction="#adminPasswordOnAction" promptText="password..." />
       <Text layoutX="285.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin Login">
          <font>
             <Font size="36.0" />

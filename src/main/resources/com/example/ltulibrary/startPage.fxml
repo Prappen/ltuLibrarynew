@@ -10,17 +10,17 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ltulibrary.startPageController">
     <children>
         <BorderPane prefHeight="400.0" prefWidth="279.0" style="-fx-background-color: #263F70;" />
-        <Button fx:id="searchButton" layoutX="327.0" layoutY="76.0" mnemonicParsing="false" onAction="#searchbuttonAction" prefHeight="51.0" prefWidth="138.0" text="Search" textFill="#111111">
+        <Button fx:id="searchButton" layoutX="327.0" layoutY="21.0" mnemonicParsing="false" onAction="#searchbuttonAction" prefHeight="51.0" prefWidth="138.0" text="Search" textFill="#111111">
             <font>
                 <Font name="System Bold" size="13.0" />
             </font>
         </Button>
-        <Button fx:id="adminButton" layoutX="327.0" layoutY="220.0" mnemonicParsing="false" onAction="#onadminLogin" prefHeight="51.0" prefWidth="138.0" text="Admin Login" textFill="#111111">
+        <Button fx:id="adminButton" layoutX="328.0" layoutY="148.0" mnemonicParsing="false" onAction="#onadminLogin" prefHeight="51.0" prefWidth="138.0" text="Admin Login" textFill="#111111">
             <font>
                 <Font name="System Bold" size="13.0" />
             </font>
         </Button>
-        <Button fx:id="loanButton" layoutX="328.0" layoutY="146.0" mnemonicParsing="false" onAction="#onLoad" prefHeight="51.0" prefWidth="138.0" text="Loan" textFill="#111111">
+        <Button fx:id="loginbutton" layoutX="328.0" layoutY="85.0" mnemonicParsing="false" onAction="#onLoad" prefHeight="51.0" prefWidth="138.0" text="Login" textFill="#111111">
             <font>
                 <Font name="System Bold" size="13.0" />
             </font>
@@ -33,10 +33,20 @@
                     </font>
                 </Text>
             </children></VBox>
-        <Button fx:id="cancelButton" layoutX="328.0" layoutY="324.0" mnemonicParsing="false" onAction="#cancelButtonOnAction" prefHeight="51.0" prefWidth="138.0" text="Cancel" textFill="#111111">
+        <Button fx:id="cancelButton" layoutX="328.0" layoutY="334.0" mnemonicParsing="false" onAction="#cancelButtonOnAction" prefHeight="51.0" prefWidth="138.0" text="Cancel" textFill="#111111">
             <font>
                 <Font name="System Bold" size="13.0" />
             </font>
         </Button>
+      <Button fx:id="ReturnBook1" layoutX="328.0" layoutY="212.0" mnemonicParsing="false" onAction="#onReturnBook1" prefHeight="51.0" prefWidth="138.0" text="Return bok" textFill="#111111">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="returnDvd1" layoutX="328.0" layoutY="272.0" mnemonicParsing="false" onAction="#onReturnDvd1" prefHeight="51.0" prefWidth="138.0" text="Return dvd" textFill="#111111">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>

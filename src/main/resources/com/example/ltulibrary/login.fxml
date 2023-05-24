@@ -19,8 +19,8 @@
                 </Text>
             </top>
         </BorderPane>
-        <TextField layoutX="300.0" layoutY="149.0" promptText="Username..." />
-        <PasswordField layoutX="300.0" layoutY="188.0" promptText="Password..." />
+        <TextField fx:id="username" layoutX="300.0" layoutY="149.0" promptText="Username..." />
+        <PasswordField fx:id="password" layoutX="300.0" layoutY="188.0" promptText="Password..." />
         <Button fx:id="registerButton" layoutX="321.0" layoutY="335.0" mnemonicParsing="false" onAction="#onRegister" text="Create an account" />
         <Text layoutX="304.0" layoutY="323.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you new? Sign up here!" wrappingWidth="150.21630859375">
             <font>

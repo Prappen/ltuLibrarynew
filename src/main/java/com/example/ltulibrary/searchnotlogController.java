@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -23,7 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class searchController implements Initializable {
+public class searchnotlogController implements Initializable {
 
     private List<booksearchModel> cartBooks = new ArrayList<>();
     private List<dvdsearchModel> cartDVDs = new ArrayList<>();
@@ -83,6 +84,10 @@ public class searchController implements Initializable {
 
     @FXML
     private TextField keywordsField;
+    @FXML
+    private Button login;
+    @FXML
+    private Button Cancelsearch;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -204,216 +209,19 @@ public class searchController implements Initializable {
         });
     }
 
-    private String username;
-    private String password;
-
-    public int getKund_Id() {
-        return kund_Id;
+    public void loginAction(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) login.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
     }
 
-    private int kund_Id;
-    private String name_F;
-
-    public String getName_F() {
-        return name_F;
-    }
-
-    public String getName_E() {
-        return name_E;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public String getKund_Typ() {
-        return kund_Typ;
-    }
-
-    private String name_E;
-    private String email;
-    private String phone;
-    private String address;
-    private int age;
-    private String kund_Typ;
-
-    public void setUserCredentials(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public void setUserDetails(int kund_Id, String name_F, String name_E, String email, String phone, String address, int age, String kund_Typ) {
-        this.kund_Id = kund_Id;
-        this.name_F = name_F;
-        this.name_E = name_E;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.age = age;
-        this.kund_Typ = kund_Typ;
-
-    }
-
-    @FXML
-    public void AddbookAction(ActionEvent actionEvent) {
-        // Get the selected item from the bookTableView or dvdTableView
-        booksearchModel selectedBook = bookTableView.getSelectionModel().getSelectedItem();
-        dvdsearchModel selectedDVD = dvdTableView.getSelectionModel().getSelectedItem();
-
-        if (selectedBook != null) {
-            // Add the selected book to the cartBooks list
-            cartBooks.add(selectedBook);
-            System.out.println("book addad");
-        }
-
-        if (selectedDVD != null) {
-            int ageRatingProperty = selectedDVD.getAldersgrans();
-            int userAge = age;
-
-            if (userAge >= ageRatingProperty) {
-                cartDVDs.add(selectedDVD);
-                System.out.println("dvd addad");
-                // Use the DVD name as needed in your application (e.g., add it to the receipt)
-            } else {
-                System.out.println("You are not old enough to rent this DVD.");
-            }
-        }
-    }
-
-    public void checkout(ActionEvent actionEvent) throws SQLException, IOException {
-        // Check if the borrower has reached the maximum number of items allowed
-        int maxItemsAllowed = getMaxItemsAllowed(kund_Typ);
-        int totalItemsBorrowed = cartBooks.size() + cartDVDs.size();
-
-        if (totalItemsBorrowed >= maxItemsAllowed) {
-            System.out.println("You have reached the maximum number of items allowed for borrowing.");
-            return;
-        }
-
-        booksearchModel selectedBook = null;
-        dvdsearchModel selectedDVD = null;
-
-        if (cartBooks != null && !cartBooks.isEmpty()) {
-            selectedBook = cartBooks.get(0);
-        }
-
-        if (cartDVDs != null && !cartDVDs.isEmpty()) {
-            selectedDVD = cartDVDs.get(0);
-        }
-
-        Calendar returnDate = null;
-        PreparedStatement bokLanInsertStatement = null;
-
-        try {
-            // Step 1: Insert a new row into the Lan table
-            String lanInsertQuery = "INSERT INTO Lan (kund_Id) VALUES (?)";
-            databaseConnection db = new databaseConnection();
-            PreparedStatement lanInsertStatement = db.conn.prepareStatement(lanInsertQuery, Statement.RETURN_GENERATED_KEYS);
-            lanInsertStatement.setInt(1, kund_Id);
-            lanInsertStatement.executeUpdate();
-
-            // Retrieve the generated lan_Id for the new loan
-            int lanId;
-            try (ResultSet generatedKeys = lanInsertStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    lanId = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("Failed to retrieve generated lan_Id.");
-                }
-            }
-
-            // Calculate the return date based on the category of the book
-            returnDate = Calendar.getInstance();
-            if (selectedBook.getKategori().equalsIgnoreCase("skolbok")) {
-                returnDate.add(Calendar.DAY_OF_MONTH, 14);
-            } else if (selectedBook.getKategori().equalsIgnoreCase("skönlitterär")) {
-                returnDate.add(Calendar.MONTH, 1);
-            }
-
-            // Step 2: Insert a new row into the Bok_Lan table
-            String bokLanInsertQuery = "INSERT INTO Bok_Lan (datum_Utlanad, bok_Status, barcode_Bok, lan_Id, return_Date) VALUES (?, ?, ?, ?, ?)";
-            bokLanInsertStatement = db.conn.prepareStatement(bokLanInsertQuery);
-            bokLanInsertStatement.setDate(1, getCurrentDate());
-            bokLanInsertStatement.setString(2, "Loaned");
-            bokLanInsertStatement.setInt(3, selectedBook.getBarcode_Bok());
-            bokLanInsertStatement.setInt(4, lanId);
-            bokLanInsertStatement.setDate(5, new Date(returnDate.getTimeInMillis()));
-            bokLanInsertStatement.executeUpdate();
-
-            if (selectedDVD != null) {
-                // Calculate the return date based on the category of the DVD
-                returnDate = Calendar.getInstance();
-                returnDate.add(Calendar.DAY_OF_MONTH, 7);
-
-                // Step 3: Insert a new row into the DVD_Lan table, referencing the same Lan
-                String dvdLanInsertQuery = "INSERT INTO DVD_Lan (dvddatum_Utlanad, dvd_Status, barcode_DVD, lan_Id, dvdreturn_Date) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement dvdLanInsertStatement = db.conn.prepareStatement(dvdLanInsertQuery);
-                dvdLanInsertStatement.setDate(1, getCurrentDate());
-                dvdLanInsertStatement.setString(2, "Loaned");
-                dvdLanInsertStatement.setInt(3, selectedDVD.getBarcode_DVD());
-                dvdLanInsertStatement.setInt(4, lanId);
-                dvdLanInsertStatement.setDate(5, new Date(returnDate.getTimeInMillis()));
-                dvdLanInsertStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        // Load the Checkout.fxml file
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Checkout.fxml"));
-        Parent checkoutRoot = loader.load();
-
-        // Create a new scene with the loaded FXML file
-        Scene checkoutScene = new Scene(checkoutRoot);
-
-        // Get the current stage
-        Stage currentStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-
-        // Set the new scene on the current stage
-        currentStage.setScene(checkoutScene);
-        currentStage.show();
-    }
-
-
-
-    private Date getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        java.util.Date currentDate = calendar.getTime();
-        return new Date(currentDate.getTime());
-    }
-
-    private int getMaxItemsAllowed(String borrowerCategory) {
-        borrowerCategory = getKund_Typ();
-        int maxItems = 0;
-
-        // Assign maximum number of items based on borrower's categorization
-        if (borrowerCategory.equalsIgnoreCase("student")) {
-            maxItems = 5; // Set the maximum number of items for students
-        } else if (borrowerCategory.equalsIgnoreCase("scientist")) {
-            maxItems = 10; // Set the maximum number of items for researchers
-        } else if (borrowerCategory.equalsIgnoreCase("teacher")) {
-            maxItems = 7; // Set the maximum number of items for other university employees
-        } else if (borrowerCategory.equalsIgnoreCase("public")) {
-            maxItems = 3;
-        }
-
-        return maxItems;
-    }
-
-    @FXML
-    public void Cancelsearch(ActionEvent actionEvent) {
-        // Code for canceling the search action
+    public void Cancelsearch(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("startPage.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) Cancelsearch.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
     }
 }

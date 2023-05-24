@@ -24,11 +24,15 @@ public class startPageController  implements Initializable {
     @FXML
     private Button cancelButton;
     @FXML
-    private Button loanButton;
+    private Button loginbutton;
     @FXML
     private Button searchButton;
     @FXML
     private Button adminButton;
+    @FXML
+    private Button ReturnBook1;
+    @FXML
+    private Button returnDvd1;
 
 
     @FXML
@@ -43,12 +47,12 @@ public class startPageController  implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login.fxml"));
         Parent myPagesParent = fxmlLoader.load();
         Scene myPagesScene = new Scene(myPagesParent);
-        Stage currentStage = (Stage) loanButton.getScene().getWindow();
+        Stage currentStage = (Stage) loginbutton.getScene().getWindow();
         currentStage.setScene(myPagesScene);
     }
 
-    public void onSearch() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("search.fxml"));
+    public void searchbuttonAction() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("searchnotlogin.fxml"));
         Parent myPagesParent = fxmlLoader.load();
         Scene myPagesScene = new Scene(myPagesParent);
         Stage currentStage = (Stage) searchButton.getScene().getWindow();
@@ -61,6 +65,20 @@ public class startPageController  implements Initializable {
         Parent myPagesParent = fxmlLoader.load();
         Scene myPagesScene = new Scene(myPagesParent);
         Stage currentStage = (Stage) adminButton.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
+    }
+    public void onReturnBook1() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("returnBook.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) ReturnBook1.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
+    }
+    public void onReturnDvd1() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("returnDVD.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) returnDvd1.getScene().getWindow();
         currentStage.setScene(myPagesScene);
     }
 }

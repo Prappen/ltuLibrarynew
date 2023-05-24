@@ -22,5 +22,5 @@ public class registerController implements Initializable {
 
 
 
-    }
+}
 

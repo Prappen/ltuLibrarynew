@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" style="-fx-background-color: #263F70;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ltulibrary.dvdsearchnotlogController">
+    <children>
+        <TableView fx:id="booktableview" layoutY="27.0" prefHeight="344.0" prefWidth="800.0">
+            <columns>
+                <TableColumn fx:id="dvdname" prefWidth="125.7142333984375" text="Namn" />
+                <TableColumn fx:id="dvdgenre" prefWidth="74.2857666015625" text="Year" />
+                <TableColumn fx:id="dvdregissor" prefWidth="100.0" text="Genre" />
+                <TableColumn fx:id="dvdaldersgrans" prefWidth="100.0" text="Categorys" />
+                <TableColumn fx:id="dvdhylla" prefWidth="100.0" text="Autor" />
+                <TableColumn fx:id="dvdantalkopiorinne" prefWidth="100.0" text="Shelf" />
+                <TableColumn fx:id="bookshelf" prefWidth="100.0" text="Amount" />
+                <TableColumn fx:id="ISBN" prefWidth="100.0" text="ISBN" />
+            </columns>
+        </TableView>
+        <Label layoutX="50.0" layoutY="6.0" text="Search" textFill="#fdfdfd" />
+        <TextField fx:id="Keywordsbooks" layoutX="86.0" layoutY="2.0" prefHeight="17.0" prefWidth="132.0" promptText="KEY WORDS" />
+        <Button fx:id="Cancelsearch" onAction="#CancelsearchAction" layoutX="634.0" layoutY="371.0" mnemonicParsing="false" text="Cancel" />
+        <Button fx:id="Login"  onAction="#loginAction" layoutX="719.0" layoutY="371.0" mnemonicParsing="false" text="Logg in" />
+    </children>
+</Pane>
