@@ -13,4 +13,9 @@ public class loanController {
 
     public List<booksearchModel> getAddedBook() {
         return addedBook;}
+
+    public void setUserData(String firstName) {
+
+
     }
+}

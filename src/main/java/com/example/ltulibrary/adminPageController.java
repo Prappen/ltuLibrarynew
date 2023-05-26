@@ -26,6 +26,9 @@ public class adminPageController  implements Initializable {
     private Button bookButton;
     @FXML
     private Button DvdButton;
+    @FXML
+    private Button handleLoanButton;
+
 
 
     public void OnAdminReturn() throws IOException {
@@ -55,6 +58,16 @@ public class adminPageController  implements Initializable {
 
 
     }
+    public void onHandleLoan() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hantera.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) handleLoanButton.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
+
+
+    }
 }
+
 
 

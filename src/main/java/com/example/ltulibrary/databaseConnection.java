@@ -12,6 +12,7 @@ public class databaseConnection {
     static Statement st = null;
     public Connection connect;
 
+
     public static void connect() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/ltulibrarysql"; // Remove the backticks around the database name
         String username = "root"; // Replace with your MySQL username

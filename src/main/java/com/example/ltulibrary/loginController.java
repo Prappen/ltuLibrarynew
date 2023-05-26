@@ -29,7 +29,7 @@ public class loginController implements Initializable {
     @FXML
     private Button loginButton;
     @FXML
-    private Button cancleButton;
+    private Button registerButton;
 
 
     private Connection connection;
@@ -100,5 +100,16 @@ public class loginController implements Initializable {
     }
 
     public void onRegister(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("register.fxml"));
+            Parent loginPageParent = loader.load();
+            Stage stage = (Stage) registerButton.getScene().getWindow();
+            stage.setScene(new Scene(loginPageParent));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
