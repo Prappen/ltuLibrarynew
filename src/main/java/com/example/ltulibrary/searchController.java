@@ -356,26 +356,18 @@ public class searchController implements Initializable {
     public void checkout(ActionEvent actionEvent) throws SQLException, IOException {
         // Check if the borrower has reached the maximum number of items allowed
 
-
-        booksearchModel selectedBook = null;
-        dvdsearchModel selectedDVD = null;
-
-        if (cartBooks != null && !cartBooks.isEmpty()) {
-            selectedBook = cartBooks.get(0);
-        }
-
-        if (cartDVDs != null && !cartDVDs.isEmpty()) {
-            selectedDVD = cartDVDs.get(0);
-        }
+        booksearchModel selectedBook = cartBooks.isEmpty() ? null : cartBooks.get(0);
+        dvdsearchModel selectedDVD = cartDVDs.isEmpty() ? null : cartDVDs.get(0);
 
         Calendar returnDate = null;
         PreparedStatement bokLanInsertStatement = null;
 
-        try {
+        try  {
+            databaseConnection.connect(); // Establish the database connection
 
+            // Insert a new row into the Lan table
             String lanInsertQuery = "INSERT INTO Lan (kund_Id) VALUES (?)";
-            databaseConnection db = new databaseConnection();
-            PreparedStatement lanInsertStatement = db.conn.prepareStatement(lanInsertQuery, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement lanInsertStatement = databaseConnection.conn.prepareStatement(lanInsertQuery, Statement.RETURN_GENERATED_KEYS);
             lanInsertStatement.setInt(1, kund_Id);
             lanInsertStatement.executeUpdate();
 
@@ -390,18 +382,18 @@ public class searchController implements Initializable {
 
             // Calculate the return date based on the category of the book
             returnDate = Calendar.getInstance();
-            if (selectedBook.getKategori().equalsIgnoreCase("skolbok")) {
+            if (selectedBook != null && selectedBook.getKategori().equalsIgnoreCase("skolbok")) {
                 returnDate.add(Calendar.DAY_OF_MONTH, 14);
-            } else if (selectedBook.getKategori().equalsIgnoreCase("skönlitterär")) {
+            } else if (selectedBook != null && selectedBook.getKategori().equalsIgnoreCase("skönlitterär")) {
                 returnDate.add(Calendar.MONTH, 1);
             }
 
-            // Step 2: Insert a new row into the Bok_Lan table
+            // Insert a new row into the Bok_Lan table
             String bokLanInsertQuery = "INSERT INTO Bok_Lan (datum_Utlanad, bok_Status, barcode_Bok, lan_Id, return_Date) VALUES (?, ?, ?, ?, ?)";
-            bokLanInsertStatement = db.conn.prepareStatement(bokLanInsertQuery);
+            bokLanInsertStatement = databaseConnection.conn.prepareStatement(bokLanInsertQuery);
             bokLanInsertStatement.setDate(1, getCurrentDate());
             bokLanInsertStatement.setString(2, "Loaned");
-            bokLanInsertStatement.setInt(3, selectedBook.getBarcode_Bok());
+            bokLanInsertStatement.setInt(3, selectedBook != null ? selectedBook.getBarcode_Bok() : 0);
             bokLanInsertStatement.setInt(4, lanId);
             bokLanInsertStatement.setDate(5, new Date(returnDate.getTimeInMillis()));
             bokLanInsertStatement.executeUpdate();
@@ -411,9 +403,9 @@ public class searchController implements Initializable {
                 returnDate = Calendar.getInstance();
                 returnDate.add(Calendar.DAY_OF_MONTH, 7);
 
-                // Step 3: Insert a new row into the DVD_Lan table, referencing the same Lan
+                // Insert a new row into the DVD_Lan table, referencing the same Lan
                 String dvdLanInsertQuery = "INSERT INTO DVD_Lan (dvddatum_Utlanad, dvd_Status, barcode_DVD, lan_Id, dvdreturn_Date) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement dvdLanInsertStatement = db.conn.prepareStatement(dvdLanInsertQuery);
+                PreparedStatement dvdLanInsertStatement = databaseConnection.conn.prepareStatement(dvdLanInsertQuery);
                 dvdLanInsertStatement.setDate(1, getCurrentDate());
                 dvdLanInsertStatement.setString(2, "Loaned");
                 dvdLanInsertStatement.setInt(3, selectedDVD.getBarcode_DVD());
@@ -423,6 +415,11 @@ public class searchController implements Initializable {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // Close the prepared statement if it's no longer needed
+            if (bokLanInsertStatement != null) {
+                bokLanInsertStatement.close();
+            }
         }
 
         // Load the Checkout.fxml file
@@ -439,7 +436,6 @@ public class searchController implements Initializable {
         currentStage.setScene(checkoutScene);
         currentStage.show();
     }
-
 
 
     private Date getCurrentDate() {
