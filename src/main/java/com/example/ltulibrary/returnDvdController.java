@@ -1,10 +1,16 @@
 package com.example.ltulibrary;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +24,7 @@ public class returnDvdController implements Initializable {
     private TextField BarcodeDvdButton;
 
     @FXML
-    private Button returnDvdConfirmButton;
+    private Button backbutton;
 
     private Connection connection;
 
@@ -68,5 +74,13 @@ public class returnDvdController implements Initializable {
             // Handle any potential exceptions
             e.printStackTrace();
         }
+    }
+
+    public void onBack(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("startPage.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) backbutton.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
     }
 }

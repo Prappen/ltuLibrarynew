@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -83,6 +84,8 @@ public class searchController implements Initializable {
 
     @FXML
     private TextField keywordsField;
+    @FXML
+    private Button Cancelsearch;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -445,7 +448,12 @@ public class searchController implements Initializable {
     }
 
     @FXML
-    public void Cancelsearch(ActionEvent actionEvent) {
+    public void Cancelsearch(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("startPage.fxml"));
+        Parent myPagesParent = fxmlLoader.load();
+        Scene myPagesScene = new Scene(myPagesParent);
+        Stage currentStage = (Stage) Cancelsearch.getScene().getWindow();
+        currentStage.setScene(myPagesScene);
         // Code for canceling the search action
     }
 }
