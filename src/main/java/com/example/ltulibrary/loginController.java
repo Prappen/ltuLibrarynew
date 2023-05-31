@@ -77,7 +77,6 @@ public class loginController implements Initializable {
                 // Pass the user credentials to the searchController
                 searchController.setUserCredentials(enteredUsername, enteredPassword);
 
-                // Fetch the user details from the result set
                 int kund_Id = resultSet.getInt("kund_Id");
                 String name_F = resultSet.getString("namn_F");
                 String name_E = resultSet.getString("namn_E");
@@ -87,7 +86,6 @@ public class loginController implements Initializable {
                 int age = resultSet.getInt("age");
                 String kund_Typ = resultSet.getString("kund_Typ");
 
-                // Pass the user details to the searchController
                 searchController.setUserDetails(kund_Id,name_F, name_E, email, phone, address, age, kund_Typ);
             } else {
                 System.out.println("Invalid credentials");

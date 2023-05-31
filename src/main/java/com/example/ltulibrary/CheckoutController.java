@@ -41,18 +41,17 @@ public class CheckoutController implements Initializable {
 
     private void generateReceipt(databaseConnection db) {
         try {
-            // Create the SQL query to retrieve the newest added loan and Kund information
-            String sql = "SELECT Kund.namn_F, Kund.namn_E, Kund.telefon_Nr, Kund.epost, Lan.lan_Id, Bok_Lan.datum_Utlanad, Bok_Lan.return_Date, Bok.barcode_Bok, DVD_Lan.dvddatum_Utlanad, DVD_Lan.dvdreturn_Date, DVD.barcode_DVD " +
-                    "FROM Kund " +
-                    "JOIN Lan ON Kund.kund_Id = Lan.kund_Id " +
-                    "LEFT JOIN Bok_Lan ON Lan.lan_Id = Bok_Lan.lan_Id " +
-                    "LEFT JOIN Bok ON Bok_Lan.barcode_Bok = Bok.barcode_Bok " +
-                    "LEFT JOIN DVD_Lan ON Lan.lan_Id = DVD_Lan.lan_Id " +
-                    "LEFT JOIN DVD ON DVD_Lan.barcode_DVD = DVD.barcode_DVD " +
-                    "ORDER BY Lan.lan_Id DESC " +
-                    "LIMIT 1";
+            // Create the SQL
+            String sql = "SELECT Kund.namn_F, Kund.namn_E, Kund.telefon_Nr, Kund.epost, Lan.lan_Id, Bok_Lan.datum_Utlanad, Bok_Lan.return_Date, Bok.barcode_Bok, Bok.bok_Namn, Dvd.dvd_Namn, DVD_Lan.dvddatum_Utlanad, DVD_Lan.dvdreturn_Date, DVD.barcode_DVD\n" +
+                    "FROM Kund\n" +
+                    "JOIN Lan ON Kund.kund_Id = Lan.kund_Id\n" +
+                    "LEFT JOIN Bok_Lan ON Lan.lan_Id = Bok_Lan.lan_Id\n" +
+                    "LEFT JOIN Bok ON Bok_Lan.barcode_Bok = Bok.barcode_Bok\n" +
+                    "LEFT JOIN DVD_Lan ON Lan.lan_Id = DVD_Lan.lan_Id\n" +
+                    "LEFT JOIN DVD ON DVD_Lan.barcode_DVD = DVD.barcode_DVD\n" +
+                    "ORDER BY Lan.lan_Id DESC\n" +
+                    "LIMIT 1;\n";
 
-            // Execute the query
             Statement statement = db.conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery(sql);
 
@@ -63,6 +62,8 @@ public class CheckoutController implements Initializable {
                 java.sql.Date datumUtlanad = resultSet.getDate("datum_Utlanad");
                 java.sql.Date returnDate = resultSet.getDate("return_date");
                 String barcodeBok = resultSet.getString("barcode_Bok");
+                String boknamn = resultSet.getString("bok_Namn");
+                String dvdnamn = resultSet.getString("dvd_Namn");
                 java.sql.Date dvdDatumUtlanad = resultSet.getDate("dvddatum_Utlanad");
                 java.sql.Date dvdReturnDate = resultSet.getDate("dvdreturn_date");
                 String barcodeDVD = resultSet.getString("barcode_DVD");
@@ -73,11 +74,13 @@ public class CheckoutController implements Initializable {
                 // Create the receipt message
                 String receiptMessage =
                         "Receipt\n" +
-                                "Customer Name (First): " + namnF + " " + namnE + "\n" +
+                                "Customer Name: " + namnF + " " + namnE + "\n" +
                                 "Loan ID: " + lanId + "\n" +
+                                "Book Name: " + boknamn+ "\n" +
                                 "Book Loan Date: " + datumUtlanad + "\n" +
                                 "Book Return Date: " + returnDate + "\n" +
                                 "Book Barcode: " + barcodeBok + "\n" +
+                                "DVD Name: "+dvdnamn+"\n"+
                                 "DVD Loan Date: " + dvdDatumUtlanad + "\n" +
                                 "DVD Return Date: " + dvdReturnDate + "\n" +
                                 "DVD Barcode: " + barcodeDVD + "\n" +

@@ -274,8 +274,12 @@ public class searchController implements Initializable {
 
         if (selectedBook != null) {
             // Add the selected book to the cartBooks list
-            cartBooks.add(selectedBook);
-            System.out.println("book addad");
+            if (checkLoanLimit(kund_Typ)) {
+                cartBooks.add(selectedBook);
+                System.out.println("Book added");
+            } else {
+                System.out.println("You have reached the maximum number of loans for your customer type.");
+            }
         }
 
         if (selectedDVD != null) {
@@ -283,24 +287,75 @@ public class searchController implements Initializable {
             int userAge = age;
 
             if (userAge >= ageRatingProperty) {
-                cartDVDs.add(selectedDVD);
-                System.out.println("dvd addad");
-                // Use the DVD name as needed in your application (e.g., add it to the receipt)
+                // Check loan limit for DVD
+                if (checkLoanLimit(kund_Typ)) {
+                    cartDVDs.add(selectedDVD);
+                    System.out.println("DVD added");
+                    // Use the DVD name as needed in your application (e.g., add it to the receipt)
+                } else {
+                    System.out.println("You have reached the maximum number of loans for your customer type.");
+                }
             } else {
                 System.out.println("You are not old enough to rent this DVD.");
             }
         }
     }
 
+    // Method to check loan limit based on the customer type
+    private boolean checkLoanLimit(String kund_Typ) {
+        int loanLimit = 0;
+
+        // Set the loan limit based on the customer type
+        if (kund_Typ.equalsIgnoreCase("student")) {
+            loanLimit = 10;
+        } else if (kund_Typ.equalsIgnoreCase("scientist") || kund_Typ.equalsIgnoreCase("teacher")) {
+            loanLimit = 20;
+        }
+
+        // Retrieve the number of loans for the customer from the database
+        int numLoans = getNumLoans(kund_Typ);
+
+        // Check if the number of loans exceeds the loan limit
+        return numLoans < loanLimit;
+    }
+
+    // Method to retrieve the number of loans for a customer from the database
+    private int getNumLoans(String kund_Typ) {
+        int numLoans = 0;
+
+        try {
+            // Establish the database connection
+            databaseConnection.connect();
+
+            // Query to retrieve the number of loans for the customer type
+            String query = "SELECT COUNT(*) FROM lan JOIN kund ON lan.kund_Id = kund.kund_Id WHERE kund.kund_Typ = ?";
+
+            // Create the prepared statement
+            PreparedStatement pstmt = databaseConnection.conn.prepareStatement(query);
+            pstmt.setString(1, getKund_Typ());
+
+            // Execute the query
+            ResultSet rs = pstmt.executeQuery();
+
+            // Retrieve the result
+            if (rs.next()) {
+                numLoans = rs.getInt(1);
+            }
+
+            // Close the result set, prepared statement, and database connection
+            rs.close();
+            pstmt.close();
+            databaseConnection.conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return numLoans;
+    }
+
     public void checkout(ActionEvent actionEvent) throws SQLException, IOException {
         // Check if the borrower has reached the maximum number of items allowed
-        int maxItemsAllowed = getMaxItemsAllowed(kund_Typ);
-        int totalItemsBorrowed = cartBooks.size() + cartDVDs.size();
 
-        if (totalItemsBorrowed >= maxItemsAllowed) {
-            System.out.println("You have reached the maximum number of items allowed for borrowing.");
-            return;
-        }
 
         booksearchModel selectedBook = null;
         dvdsearchModel selectedDVD = null;
@@ -317,14 +372,13 @@ public class searchController implements Initializable {
         PreparedStatement bokLanInsertStatement = null;
 
         try {
-            // Step 1: Insert a new row into the Lan table
+
             String lanInsertQuery = "INSERT INTO Lan (kund_Id) VALUES (?)";
             databaseConnection db = new databaseConnection();
             PreparedStatement lanInsertStatement = db.conn.prepareStatement(lanInsertQuery, Statement.RETURN_GENERATED_KEYS);
             lanInsertStatement.setInt(1, kund_Id);
             lanInsertStatement.executeUpdate();
 
-            // Retrieve the generated lan_Id for the new loan
             int lanId;
             try (ResultSet generatedKeys = lanInsertStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -392,24 +446,6 @@ public class searchController implements Initializable {
         Calendar calendar = Calendar.getInstance();
         java.util.Date currentDate = calendar.getTime();
         return new Date(currentDate.getTime());
-    }
-
-    private int getMaxItemsAllowed(String borrowerCategory) {
-        borrowerCategory = getKund_Typ();
-        int maxItems = 0;
-
-        // Assign maximum number of items based on borrower's categorization
-        if (borrowerCategory.equalsIgnoreCase("student")) {
-            maxItems = 5; // Set the maximum number of items for students
-        } else if (borrowerCategory.equalsIgnoreCase("scientist")) {
-            maxItems = 10; // Set the maximum number of items for researchers
-        } else if (borrowerCategory.equalsIgnoreCase("teacher")) {
-            maxItems = 7; // Set the maximum number of items for other university employees
-        } else if (borrowerCategory.equalsIgnoreCase("public")) {
-            maxItems = 3;
-        }
-
-        return maxItems;
     }
 
     @FXML

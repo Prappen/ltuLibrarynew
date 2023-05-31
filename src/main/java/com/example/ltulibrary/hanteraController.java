@@ -34,7 +34,6 @@ public class hanteraController implements Initializable {
             Statement statement = connect.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            // Iterate through the result set and append email addresses to the StringBuilder
             emailAddresses = new StringBuilder();
             while (resultSet.next()) {
                 String emailAddress = resultSet.getString("epost");
@@ -47,20 +46,19 @@ public class hanteraController implements Initializable {
             System.out.println("Retrieved email addresses: " + emailAddresses.toString()); // Debug statement
 
             if (mailListaTextArea != null) {
-                System.out.println("TextArea found"); // Debug statement
-                mailListaTextArea.setText(emailAddresses.toString()); // Set the email addresses in the TextArea
+                System.out.println("TextArea found");
+                mailListaTextArea.setText(emailAddresses.toString());
             } else {
-                System.out.println("TextArea not found"); // Debug statement
+                System.out.println("TextArea not found");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle any potential exceptions according to your application's requirements
         }
     }
 
     public void onMailLista(DragEvent event) {
         if (emailAddresses != null) {
-            mailListaTextArea.setText(emailAddresses.toString()); // Set the email addresses in the TextArea
+            mailListaTextArea.setText(emailAddresses.toString());
         }
     }
 }

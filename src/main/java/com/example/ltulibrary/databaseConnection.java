@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class databaseConnection {
-    static String name = "";
-    static String bookNames = "";
     public static Connection conn = null;
     static Statement st = null;
     public Connection connect;
